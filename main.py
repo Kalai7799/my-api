@@ -5,12 +5,19 @@ from openai import OpenAI
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse, FileResponse
 from tempfile import NamedTemporaryFile
-
+from fastapi.middleware.cors import CORSMiddleware
 # Setup Groq API
 os.environ["GROQ_API_KEY"] = "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"
 client = OpenAI(api_key=os.getenv("GROQ_API_KEY"), base_url="https://api.groq.com/openai/v1")
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 🔴 For production, replace "*" with frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
